@@ -12,5 +12,5 @@ run:
   image: null
   jarName: spb4you-backend-0.0.1-SNAPSHOT.jar
   persistenceMount: /data
-  containerPort: "80"
-  servicePort: "80"
+  containerPort: 8080
+#  servicePort: "80"
