@@ -10,7 +10,7 @@ import java.util.Map;
 public class GreetingController {
 
     // Разрешаем запросы с локального React-сервера и с будущего домена фронтенда
-    @CrossOrigin(origins = {"http://localhost:3000", "https://spb4you-frontend.amvera.io"})
+    @CrossOrigin(origins = {"http://localhost:3000", "https://spb4you-frontend-sgbagaeva.amvera.io/"})
     // Разрешаем запросы с любого домена (для теста) или укажите точный URL вашего фронтенда
     // @CrossOrigin(origins = "*")
 // Или лучше так (замените на ваш реальный URL фронтенда после деплоя):
