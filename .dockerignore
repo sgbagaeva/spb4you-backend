@@ -1,0 +1,13 @@
+.git
+.gitignore
+README.md
+docker-compose.yml
+init.sql
+gradle/
+gradlew
+gradlew.bat
+src/
+build/
+!build/libs/
+out/
+*.log

@@ -1,0 +1,101 @@
+# Версия формата Compose (3.8 - последняя стабильная)
+version: '3.8'
+
+# Секция services - описывает все контейнеры
+services:
+  # Сервис 1: PostgreSQL база данных
+  postgres:
+    # Официальный образ PostgreSQL 15 версии
+    image: postgres:15
+
+    # Имя контейнера для удобства
+    container_name: spb4you-postgres
+
+    # Переменные окружения для настройки БД
+    environment:
+      POSTGRES_DB: postgres           # Имя базы данных
+      POSTGRES_USER: postgres           # Имя пользователя
+      POSTGRES_PASSWORD: svetapostgresql#666   # Пароль
+      # Дополнительные настройки (опционально):
+      POSTGRES_INITDB_ARGS: --encoding=UTF-8 --lc-collate=C --lc-ctype=C
+      TZ: Europe/Moscow               # Часовой пояс
+
+    # Проброс портов: ХОСТ:КОНТЕЙНЕР
+    ports:
+      - "5432:5432"  # Локальный порт 5432 → порт 5432 в контейнере
+
+    # Тома (volumes) для сохранения данных
+    volumes:
+      # Постоянное хранилище для данных БД
+      - postgres_data:/var/lib/postgresql/data
+
+      # SQL скрипт для инициализации (создается автоматически при первом запуске)
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+    # Проверка здоровья БД
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
+      interval: 10s    # Проверка каждые 10 секунд
+      timeout: 5s      # Таймаут 5 секунд
+      retries: 5       # 5 попыток before failure
+      start_period: 10s # Ждем 10 секунд перед первой проверкой
+
+    # Политика перезапуска
+    restart: unless-stopped  # Перезапускать всегда, кроме ручной остановки
+
+  # Сервис 2: Spring Boot приложение
+  app:
+    # Собираем образ из Dockerfile в текущей директории
+    build: .
+
+    # Имя контейнера
+    container_name: spb4you-app
+
+    # Переменные окружения для приложения
+    environment:
+      # Подключение к БД - используем имя сервиса "postgres"!
+      DB_HOST: postgres      # Важно: не localhost, а имя сервиса!
+      DB_PORT: 5432
+      DB_NAME: postgres
+      DB_USERNAME: postgres
+      DB_PASSWORD: svetapostgresql#666
+
+      # Настройки Spring Boot (опционально)
+      SPRING_PROFILES_ACTIVE: prod
+      SHOW_SQL: "false"
+      SPRING_JPA_HIBERNATE_DDL_AUTO: validate
+
+      SERVER_PORT: 8080
+      SERVER_ADDRESS: 0.0.0.0
+
+      JAVA_OPTS: "-Xmx512m -Xms256m"
+
+    # Проброс портов
+    ports:
+      - "8080:8080"  # Локальный порт 8080 → порт 8080 в контейнере
+
+    # Зависимости - ждем запуска БД
+    depends_on:
+      postgres:
+        condition: service_healthy  # Ждем пока БД станет здоровой
+
+    # Перезапуск при падении
+    restart: unless-stopped
+
+    # Логирование (опционально)
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+# Секция volumes - объявляем постоянные тома
+volumes:
+  postgres_data:
+  # Именованный том для данных БД
+  # Данные сохраняются между перезапусками контейнеров
+
+# Секция networks (опционально - создается автоматически)
+networks:
+  default:
+    driver: bridge  # Мостовая сеть по умолчанию
