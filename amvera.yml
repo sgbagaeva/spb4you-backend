@@ -10,7 +10,7 @@ build:
   skip: false
 run:
   image: null
-  command: ./gradlew clean build -x test --no-daemon
+  command: ""
   args: null
   persistenceMount: /data
   containerPort: 80
