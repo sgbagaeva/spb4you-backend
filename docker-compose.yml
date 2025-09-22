@@ -16,9 +16,6 @@ services:
       POSTGRES_DB: postgres           # Имя базы данных
       POSTGRES_USER: postgres           # Имя пользователя
       POSTGRES_PASSWORD: svetapostgresql#666   # Пароль
-      # Дополнительные настройки (опционально):
-      POSTGRES_INITDB_ARGS: --encoding=UTF-8 --lc-collate=C --lc-ctype=C
-      TZ: Europe/Moscow               # Часовой пояс
 
     # Проброс портов: ХОСТ:КОНТЕЙНЕР
     ports:
@@ -34,11 +31,10 @@ services:
 
     # Проверка здоровья БД
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
-      interval: 10s    # Проверка каждые 10 секунд
-      timeout: 5s      # Таймаут 5 секунд
-      retries: 5       # 5 попыток before failure
-      start_period: 10s # Ждем 10 секунд перед первой проверкой
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
     # Политика перезапуска
     restart: unless-stopped  # Перезапускать всегда, кроме ручной остановки
@@ -59,16 +55,10 @@ services:
       DB_NAME: postgres
       DB_USERNAME: postgres
       DB_PASSWORD: svetapostgresql#666
-
-      # Настройки Spring Boot (опционально)
-      SPRING_PROFILES_ACTIVE: prod
-      SHOW_SQL: "false"
-      SPRING_JPA_HIBERNATE_DDL_AUTO: validate
-
-      SERVER_PORT: 8080
-      SERVER_ADDRESS: 0.0.0.0
-
-      JAVA_OPTS: "-Xmx512m -Xms256m"
+      # Добавляем Java опции для лучшей работы в контейнере
+      JAVA_OPTS: "-Xmx512m -Xms256m -Dspring.datasource.hikari.connectionTimeout=60000"
+      #SERVER_PORT: 8080
+      #SERVER_ADDRESS: 0.0.0.0
 
     # Проброс портов
     ports:
@@ -77,7 +67,14 @@ services:
     # Зависимости - ждем запуска БД
     depends_on:
       postgres:
-        condition: service_healthy  # Ждем пока БД станет здоровой
+        condition: service_healthy # Ждем пока БД станет здоровой
+
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/actuator/health" ]
+      interval: 30s
+      timeout: 10s
+      retries: 20
+      start_period: 60s
 
     # Перезапуск при падении
     restart: unless-stopped
@@ -94,8 +91,3 @@ volumes:
   postgres_data:
   # Именованный том для данных БД
   # Данные сохраняются между перезапусками контейнеров
-
-# Секция networks (опционально - создается автоматически)
-networks:
-  default:
-    driver: bridge  # Мостовая сеть по умолчанию
