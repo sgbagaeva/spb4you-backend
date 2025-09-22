@@ -13,4 +13,6 @@ RUN addgroup -S spring && adduser -S spring -G spring
 USER spring
 
 EXPOSE 8080
-CMD ["java", "-jar", "app.jar"]
+
+# Явно указываем адрес и порт для Docker
+CMD ["java", "-Dserver.address=0.0.0.0", "-Dserver.port=8080", "-jar", "app.jar"]
