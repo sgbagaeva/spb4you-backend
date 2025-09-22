@@ -1,11 +1,12 @@
+version: null
 meta:
   environment: docker
   toolchain:
     name: docker
+    version: latest
 build:
   dockerfile: Dockerfile
   skip: false
-  command: "./gradlew clean build -x test --no-daemon"
 run:
   image: null
   command: null
