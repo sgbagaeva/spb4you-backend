@@ -31,6 +31,15 @@ dependencies {
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.7.2' // JUnit Platform Launcher - обеспечивает запуск тестов на платформе JUnit
 }
 
+// Отключаем создание plain jar
+jar {
+	enabled = false
+}
+
+bootJar {
+	archiveClassifier = ''
+}
+
 tasks.named('test') {
 	useJUnitPlatform()
 }
