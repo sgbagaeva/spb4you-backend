@@ -7,8 +7,8 @@ WORKDIR /app
 COPY build.gradle settings.gradle gradlew ./
 COPY gradle gradle
 
-# Даем права на выполнение gradlew
-# RUN chmod +x gradlew
+# ДАЕМ ПРАВА НА ВЫПОЛНЕНИЕ GRADLEW (это важно!)
+RUN chmod +x gradlew
 
 # Скачиваем зависимости (кэшируется)
 RUN ./gradlew dependencies --no-daemon
@@ -24,9 +24,6 @@ FROM eclipse-temurin:17-jre-alpine
 
 WORKDIR /app
 
-# Устанавливаем wget для healthcheck (легче чем curl)
-RUN apk add --no-cache wget
-
 # Копируем собранный JAR
 COPY --from=builder /app/build/libs/*.jar app.jar
 
@@ -36,5 +33,5 @@ USER spring
 
 EXPOSE 8080
 
-# Используем CMD вместо ENTRYPOINT для лучшей обработки сигналов
-CMD ["java", "-jar", "app.jar"]
+# Запускаем приложение
+ENTRYPOINT ["java", "-jar", "app.jar"]
