@@ -16,8 +16,11 @@ public class Photo {
     @JsonProperty("id")
     private Integer id;
 
-    @JsonProperty("link")
-    private String link; // Ссылка на изображение (URL)
+    @JsonProperty("url")
+    private String url; // Временная signed URL
+
+    @JsonProperty("name")
+    private String name;
 
     public Photo id(Integer id) {
         this.id = id;
@@ -37,23 +40,39 @@ public class Photo {
         this.id = id;
     }
 
-    public Photo link(String link) {
-        this.link = link;
+    public Photo url(String url) {
+        this.url = url;
         return this;
     }
 
     /**
-     * Ссылка на изображение
-     * @return link
+     * Временная signed URL фотографии
+     * @return url
      */
-    public String getLink() {
-        return link;
+    public String getUrl() {
+        return url;
     }
 
-    public void setLink(String link) {
-        this.link = link;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
+    public Photo name(String name) {
+        this.name = name;
+        return this;
+    }
+
+    /**
+     * Имя фотографии
+     * @return name
+     */
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -64,12 +83,13 @@ public class Photo {
         }
         Photo photo = (Photo) o;
         return Objects.equals(this.id, photo.id) &&
-                Objects.equals(this.link, photo.link);
+                Objects.equals(this.url, photo.url) &&
+                Objects.equals(this.name, photo.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, link);
+        return Objects.hash(id, url, name);
     }
 
     @Override
@@ -77,7 +97,8 @@ public class Photo {
         StringBuilder sb = new StringBuilder();
         sb.append("class Photo {\n");
         sb.append(" id: ").append(toIndentedString(id)).append("\n");
-        sb.append(" link: ").append(toIndentedString(link)).append("\n");
+        sb.append(" url: ").append(toIndentedString(url)).append("\n");
+        sb.append(" name: ").append(toIndentedString(name)).append("\n");
         sb.append("}");
         return sb.toString();
     }

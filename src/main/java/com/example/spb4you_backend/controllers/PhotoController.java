@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -21,6 +22,13 @@ public class PhotoController {
     @GetMapping("/photos/list")
     public ResponseEntity<List<Photo>> listLocations() {
         List<Photo> photos = photoService.findAll();
-        return ResponseEntity.ok(photos); // Возвращаем список всех локаций со всеми полями для каждой с кодом 200
+        return ResponseEntity.ok(photos); // Возвращаем список всех фото со всеми полями с кодом 200
+    }
+
+    @GetMapping("/photos/{photoId}")
+    public ResponseEntity<Photo> getLocationDetails(@PathVariable("photoId") Integer locationId) {
+        Photo photo = photoService.findById(locationId).orElse(null);
+        assert photo != null;
+        return ResponseEntity.ok(photo); // Возвращаем набор полей фото по соответствующему ID с кодом 200
     }
 }

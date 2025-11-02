@@ -14,4 +14,9 @@ public class PhotoService extends GenericService<Photo, Integer> {
         super(photoRepository);
         this.photoRepository = photoRepository;
     }
+
+    // Метод для поиска фотографии по имени
+    public Optional<Photo> findByName(String name) {
+        return photoRepository.findByName(name);
+    }
 }
