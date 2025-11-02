@@ -33,6 +33,7 @@ public class PhotoController {
         return ResponseEntity.ok(photo); // Возвращаем набор полей фото по соответствующему ID с кодом 200
     }
 
+    @CrossOrigin(origins = {"http://localhost:3000", "https://spb4you-frontend-sgbagaeva.amvera.io/"})
     @GetMapping("/photos")
     public Map<String, String> getAllPhotoUrls() {
         List<Photo> photos = photoService.findAll();
