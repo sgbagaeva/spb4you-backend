@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -30,5 +31,18 @@ public class PhotoController {
         Photo photo = photoService.findById(locationId).orElse(null);
         assert photo != null;
         return ResponseEntity.ok(photo); // Возвращаем набор полей фото по соответствующему ID с кодом 200
+    }
+
+    @GetMapping("/photos")
+    public Map<String, String> getAllPhotoUrls() {
+        List<Photo> photos = photoService.findAll();
+
+        // Преобразуем в формат { "название": "url" }
+        Map<String, String> photoUrls = new HashMap<>();
+        for (Photo photo : photos) {
+            photoUrls.put(photo.getName(), photo.getUrl());
+        }
+
+        return photoUrls;
     }
 }
