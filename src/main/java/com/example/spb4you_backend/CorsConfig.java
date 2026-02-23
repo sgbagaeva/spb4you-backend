@@ -10,7 +10,8 @@ public class CorsConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**") // разрешаем все эндпоинты
-                .allowedOrigins("https://spb4you-frontend-sgbagaeva.amvera.io") // адрес React-фронтенда
+                .allowedOrigins("https://spb4you-frontend-sgbagaeva.amvera.io",
+                        "https://another.domain.com") // адрес React-фронтенда
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // разрешенные HTTP методы
                 .allowedHeaders("*") // разрешаем все заголовки
                 .allowCredentials(true) // разрешаем куки/сессии
