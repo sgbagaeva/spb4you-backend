@@ -1,9 +1,12 @@
 package com.example.spb4you_backend.models;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.annotation.Nonnull;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -24,6 +27,21 @@ public class Location {
     @JsonProperty("description")
     private String description;
 
+    @JsonProperty("likes")
+    private Integer likes;
+
+    @JsonProperty("tags")
+    private List<Integer> tags = new ArrayList<>();
+
+    @JsonProperty("categories")
+    private List<Integer> categories = new ArrayList<>();
+
+    @JsonProperty("created_at")
+    private LocalDateTime createdAt;
+
+    @JsonProperty("updated_at")
+    private LocalDateTime updatedAt;
+
     /**
      * Уникальный идентификатор локации
      * @return id
@@ -35,11 +53,6 @@ public class Location {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public Location name(String name) {
-        this.name = name;
-        return this;
     }
 
     /**
@@ -55,21 +68,80 @@ public class Location {
         this.name = name;
     }
 
-    public Location description(String description) {
-        this.description = description;
-        return this;
-    }
-
     /**
      * Описание локации
      * @return description
      */
+
     public String getDescription() {
         return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    /**
+     * Количество лайков локации
+     * @return likes
+     */
+    public Integer getLikes() {
+        return likes;
+    }
+
+    public void setLikes(Integer likes) {
+        this.likes = likes;
+    }
+
+    /**
+     * Теги локации
+     * @return tags
+     */
+    public List<Integer> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<Integer> tags) {
+        this.tags = tags != null ? tags : new ArrayList<>();
+    }
+
+    /**
+     * Категории локации
+     * @return categories
+     */
+
+    public List<Integer> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(List<Integer> categories) {
+        this.categories = categories != null ? categories : new ArrayList<>();
+    }
+
+    /**
+     * Время создания локации
+     * @return createdAt
+     */
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    /**
+     * Время обновления локации
+     * @return updatedAt
+     */
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     @Override
@@ -83,12 +155,17 @@ public class Location {
         Location location = (Location) o;
         return Objects.equals(this.id, location.id) &&
                 Objects.equals(this.name, location.name) &&
-                Objects.equals(this.description, location.description);
+                Objects.equals(this.description, location.description) &&
+                Objects.equals(this.likes, location.likes) &&
+                Objects.equals(this.tags, location.tags) &&
+                Objects.equals(this.categories, location.categories) &&
+                Objects.equals(this.createdAt, location.createdAt) &&
+                Objects.equals(this.updatedAt, location.updatedAt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description);
+        return Objects.hash(id, name, description, likes, tags, categories, createdAt, updatedAt);
     }
 
     @Override
@@ -98,6 +175,11 @@ public class Location {
         sb.append(" id: ").append(toIndentedString(id)).append("\n");
         sb.append(" name: ").append(toIndentedString(name)).append("\n");
         sb.append(" description: ").append(toIndentedString(description)).append("\n");
+        sb.append(" likes: ").append(toIndentedString(likes)).append("\n");
+        sb.append(" tags: ").append(toIndentedString(tags)).append("\n");
+        sb.append(" categories: ").append(toIndentedString(categories)).append("\n");
+        sb.append(" createdAt: ").append(toIndentedString(createdAt)).append("\n");
+        sb.append(" updatedAt: ").append(toIndentedString(updatedAt)).append("\n");
         sb.append("}");
         return sb.toString();
     }
@@ -109,5 +191,4 @@ public class Location {
         return o.toString().replace("\n", "\n ");
     }
 }
-
 

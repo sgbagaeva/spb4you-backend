@@ -1,4 +1,5 @@
 package com.example.spb4you_backend.services;
+
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
@@ -32,3 +33,4 @@ public abstract class GenericService<T, ID> {
     }
 
 }
+

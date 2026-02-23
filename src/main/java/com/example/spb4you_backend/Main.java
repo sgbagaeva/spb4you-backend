@@ -15,10 +15,5 @@ public class Main implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
         System.out.println("Приложение запустилось");
-
-        // Ваш код для создания и сохранения локации
-        Location location = locationService.findById(1).orElse(null);
-        assert location != null;
-        System.out.println(location.getName());
     }
 }

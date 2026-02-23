@@ -2,8 +2,10 @@ package com.example.spb4you_backend;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.jdbc.repository.config.EnableJdbcRepositories;
 
 @SpringBootApplication
+@EnableJdbcRepositories
 public class Spb4youBackendApplication {
 
 	public static void main(String[] args) {

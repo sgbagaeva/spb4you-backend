@@ -5,26 +5,25 @@ import jakarta.annotation.Nonnull;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
-import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
- * Photo
+ * LocationPoint
  */
-@Table(name = "photos")
-public class Photo {
+@Table("location_points")
+public class LocationPoint {
     @Id
     @JsonProperty("id")
     private Integer id;
 
-    @JsonProperty("link")
-    private String link;
+    @JsonProperty("location_id")
+    private Integer locationId;
 
-    @JsonProperty("uploaded_at")
-    private LocalDateTime uploadedAt;
+    @JsonProperty("point_id")
+    private Integer pointId;
 
     /**
-     * Уникальный идентификатор фотографии
+     * Уникальный идентификатор
      * @return id
      */
     @Nonnull
@@ -37,28 +36,29 @@ public class Photo {
     }
 
     /**
-     * Ссылка на изображение
-     * @return link
+     * ID локации
+     * @return locationId
      */
-    public String getLink() {
-        return link;
+
+    public Integer getLocationId() {
+        return locationId;
     }
 
-    public void setLink(String link) {
-        this.link = link;
+    public void setLocationId(Integer locationId) {
+        this.locationId = locationId;
     }
 
     /**
-     * Дата создания
-     * @return created_at
+     * ID точки
+     * @return pointId
      */
 
-    LocalDateTime getUploadedAt() {
-        return uploadedAt;
+    public Integer getPointId() {
+        return pointId;
     }
 
-    void setUploadedAt(LocalDateTime uploadedAt) {
-        this.uploadedAt = uploadedAt;
+    public void setPointId(Integer pointId) {
+        this.pointId = pointId;
     }
 
     @Override
@@ -69,24 +69,24 @@ public class Photo {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Photo photo = (Photo) o;
-        return Objects.equals(this.id, photo.id) &&
-                Objects.equals(this.link, photo.link) &&
-                Objects.equals(this.uploadedAt, photo.uploadedAt);
+        LocationPoint locationPoint = (LocationPoint) o;
+        return Objects.equals(this.id, locationPoint.id) &&
+                Objects.equals(this.locationId, locationPoint.locationId) &&
+                Objects.equals(this.pointId, locationPoint.pointId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, link, uploadedAt);
+        return Objects.hash(id, locationId, pointId);
     }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("class Photo {\n");
+        sb.append("class Tag {\n");
         sb.append(" id: ").append(toIndentedString(id)).append("\n");
-        sb.append(" link: ").append(toIndentedString(link)).append("\n");
-        sb.append(" uploaded_at: ").append(toIndentedString(uploadedAt)).append("\n");
+        sb.append(" locationId: ").append(toIndentedString(locationId)).append("\n");
+        sb.append(" pointId: ").append(toIndentedString(pointId)).append("\n");
         sb.append("}");
         return sb.toString();
     }
@@ -102,4 +102,3 @@ public class Photo {
         return o.toString().replace("\n", "\n ");
     }
 }
-

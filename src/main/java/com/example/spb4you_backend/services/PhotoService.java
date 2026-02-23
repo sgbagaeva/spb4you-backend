@@ -1,8 +1,8 @@
 package com.example.spb4you_backend.services;
-import com.example.spb4you_backend.repositories.PhotoRepository;
-import org.springframework.stereotype.Service;
 
 import com.example.spb4you_backend.models.Photo;
+import com.example.spb4you_backend.repositories.PhotoRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
@@ -15,8 +15,4 @@ public class PhotoService extends GenericService<Photo, Integer> {
         this.photoRepository = photoRepository;
     }
 
-    // Метод для поиска фотографии по имени
-    public Optional<Photo> findByName(String name) {
-        return photoRepository.findByName(name);
-    }
 }

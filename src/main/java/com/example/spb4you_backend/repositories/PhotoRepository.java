@@ -8,6 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface PhotoRepository extends CrudRepository<Photo, Integer> {
-    // Дополнительные методы для Photo, если нужно
-    Optional<Photo> findByName(String name);
+
 }
