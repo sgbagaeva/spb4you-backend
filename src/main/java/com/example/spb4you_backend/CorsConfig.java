@@ -1,5 +1,6 @@
 package com.example.spb4you_backend;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -7,13 +8,21 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class CorsConfig implements WebMvcConfigurer {
 
+    @Value("${cors.allowed-origins}")  // По умолчанию разрешаем все
+    private String allowedOrigins;
+
+    @Value("${cors.allow-credentials}")  // По умолчанию false для *
+    private boolean allowCredentials;
+
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**") // разрешаем все эндпоинты
-                .allowedOrigins("https://spb4you-frontend-sgbagaeva.amvera.io") // адрес React-фронтенда
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // разрешенные HTTP методы
-                .allowedHeaders("*") // разрешаем все заголовки
-                .allowCredentials(true) // разрешаем куки/сессии
-                .maxAge(3600); // время кеширования preflight запроса
+        String[] origins = allowedOrigins.split(",");
+
+        registry.addMapping("/**")
+                .allowedOrigins(origins)
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                .allowedHeaders("Content-Type", "Authorization", "X-Requested-With")
+                .allowCredentials(allowCredentials)
+                .maxAge(3600);
     }
 }
