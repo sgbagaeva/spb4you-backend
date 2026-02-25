@@ -5,6 +5,7 @@ import jakarta.annotation.Nonnull;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
@@ -21,6 +22,9 @@ public class Tag {
 
     @JsonProperty("color")
     private String color; // Цвет тега
+
+    @JsonProperty("created_at")
+    private LocalDateTime createdAt;
 
     /**
      * Уникальный идентификатор тега
@@ -61,6 +65,19 @@ public class Tag {
         this.color = color;
     }
 
+    /**
+     * Время создания тега
+     * @return createdAt
+     */
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -72,12 +89,13 @@ public class Tag {
         Tag tag = (Tag) o;
         return Objects.equals(this.id, tag.id) &&
                 Objects.equals(this.name, tag.name) &&
-                Objects.equals(this.color, tag.color);
+                Objects.equals(this.color, tag.color) &&
+                Objects.equals(this.createdAt, tag.createdAt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, color);
+        return Objects.hash(id, name, color, createdAt);
     }
 
     @Override
@@ -87,6 +105,7 @@ public class Tag {
         sb.append(" id: ").append(toIndentedString(id)).append("\n");
         sb.append(" name: ").append(toIndentedString(name)).append("\n");
         sb.append(" color: ").append(toIndentedString(color)).append("\n");
+        sb.append(" createdAt: ").append(toIndentedString(createdAt)).append("\n");
         sb.append("}");
         return sb.toString();
     }

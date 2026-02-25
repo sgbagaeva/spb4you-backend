@@ -5,6 +5,7 @@ import jakarta.annotation.Nonnull;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
@@ -24,6 +25,9 @@ public class Category {
 
     @JsonProperty("type")
     private String type; // Тип категории ('Локации'/'Маршруты')
+
+    @JsonProperty("created_at")
+    private LocalDateTime createdAt;
 
     /**
      * Уникальный идентификатор категории
@@ -82,6 +86,19 @@ public class Category {
         this.type = type;
     }
 
+    /**
+     * Время создания категории
+     * @return createdAt
+     */
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -94,12 +111,13 @@ public class Category {
         return Objects.equals(this.id, category.id) &&
                 Objects.equals(this.name, category.name) &&
                 Objects.equals(this.description, category.description) &&
-                Objects.equals(this.type, category.type);
+                Objects.equals(this.type, category.type) &&
+                Objects.equals(this.createdAt, category.createdAt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, type);
+        return Objects.hash(id, name, description, type, createdAt);
     }
 
     @Override
@@ -109,7 +127,8 @@ public class Category {
         sb.append(" id: ").append(toIndentedString(id)).append("\n");
         sb.append(" name: ").append(toIndentedString(name)).append("\n");
         sb.append(" description: ").append(toIndentedString(description)).append("\n");
-        sb.append(" type: ").append(toIndentedString(type)).append("\n");;
+        sb.append(" type: ").append(toIndentedString(type)).append("\n");
+        sb.append(" createdAt: ").append(toIndentedString(createdAt)).append("\n");
         sb.append("}");
         return sb.toString();
     }
