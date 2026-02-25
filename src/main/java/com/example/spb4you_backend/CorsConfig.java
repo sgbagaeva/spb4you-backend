@@ -8,10 +8,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class CorsConfig implements WebMvcConfigurer {
 
-    @Value("${cors.allowed-origins}")  // По умолчанию разрешаем все
+    @Value("${cors.allowed-origins}")
     private String allowedOrigins;
 
-    @Value("${cors.allow-credentials}")  // По умолчанию false для *
+    @Value("${cors.allow-credentials}")
     private boolean allowCredentials;
 
     @Override
