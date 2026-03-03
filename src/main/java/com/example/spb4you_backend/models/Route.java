@@ -34,6 +34,9 @@ public class Route {
     @JsonProperty("categories")
     private List<Integer> categories = new ArrayList<>();
 
+    @JsonProperty("main_photo_url")
+    private String mainPhotoUrl;
+
     @JsonProperty("distance")
     private Double distance;
 
@@ -126,6 +129,19 @@ public class Route {
     }
 
     /**
+     * Ссылка на главное фото маршрута
+     * @return mainPhotoUrl
+     */
+
+    public String getMainPhotoUrl() {
+        return mainPhotoUrl;
+    }
+
+    public void setMainPhotoUrl(String mainPhotoUrl) {
+        this.mainPhotoUrl = mainPhotoUrl;
+    }
+
+    /**
      * Время создания локации
      * @return createdAt
      */
@@ -166,6 +182,7 @@ public class Route {
                 Objects.equals(this.likes, route.likes) &&
                 Objects.equals(this.tags, route.tags) &&
                 Objects.equals(this.categories, route.categories) &&
+                Objects.equals(this.mainPhotoUrl, route.mainPhotoUrl) &&
                 Objects.equals(this.distance, route.distance) &&
                 Objects.equals(this.time, route.time) &&
                 Objects.equals(this.steps, route.steps) &&
@@ -176,7 +193,7 @@ public class Route {
     @Override
     public int hashCode() {
         return Objects.hash(id, name, description, likes, tags, categories,
-                distance, time, steps, createdAt, updatedAt);
+                mainPhotoUrl, distance, time, steps, createdAt, updatedAt);
     }
 
     @Override
@@ -189,6 +206,7 @@ public class Route {
         sb.append(" likes: ").append(toIndentedString(likes)).append("\n");
         sb.append(" tags: ").append(toIndentedString(tags)).append("\n");
         sb.append(" categories: ").append(toIndentedString(categories)).append("\n");
+        sb.append(" mainPhotoUrl: ").append(toIndentedString(mainPhotoUrl)).append("\n");
         sb.append(" distance: ").append(toIndentedString(distance)).append("\n");
         sb.append(" time: ").append(toIndentedString(time)).append("\n");
         sb.append(" steps: ").append(toIndentedString(steps)).append("\n");
