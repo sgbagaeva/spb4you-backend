@@ -36,6 +36,9 @@ public class Location {
     @JsonProperty("categories")
     private List<Integer> categories = new ArrayList<>();
 
+    @JsonProperty("main_photo_url")
+    private String mainPhotoUrl;
+
     @JsonProperty("created_at")
     private LocalDateTime createdAt;
 
@@ -119,6 +122,19 @@ public class Location {
     }
 
     /**
+     * Ссылка на главное фото локации
+     * @return mainPhotoUrl
+     */
+
+    public String getMainPhotoUrl() {
+        return mainPhotoUrl;
+    }
+
+    public void setMainPhotoUrl(String mainPhotoUrl) {
+        this.mainPhotoUrl = mainPhotoUrl;
+    }
+
+    /**
      * Время создания локации
      * @return createdAt
      */
@@ -159,13 +175,15 @@ public class Location {
                 Objects.equals(this.likes, location.likes) &&
                 Objects.equals(this.tags, location.tags) &&
                 Objects.equals(this.categories, location.categories) &&
+                Objects.equals(this.mainPhotoUrl, location.mainPhotoUrl) &&
                 Objects.equals(this.createdAt, location.createdAt) &&
                 Objects.equals(this.updatedAt, location.updatedAt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, likes, tags, categories, createdAt, updatedAt);
+        return Objects.hash(id, name, description, likes, tags, categories,
+                mainPhotoUrl, createdAt, updatedAt);
     }
 
     @Override
@@ -177,6 +195,7 @@ public class Location {
         sb.append(" description: ").append(toIndentedString(description)).append("\n");
         sb.append(" likes: ").append(toIndentedString(likes)).append("\n");
         sb.append(" tags: ").append(toIndentedString(tags)).append("\n");
+        sb.append(" mainPhotoUrl: ").append(toIndentedString(mainPhotoUrl)).append("\n");
         sb.append(" categories: ").append(toIndentedString(categories)).append("\n");
         sb.append(" createdAt: ").append(toIndentedString(createdAt)).append("\n");
         sb.append(" updatedAt: ").append(toIndentedString(updatedAt)).append("\n");
