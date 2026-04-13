@@ -2,15 +2,21 @@ package com.example.spb4you_backend.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.annotation.Nonnull;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
- * Tag
+ * Category
  */
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "categories")
 public class Category {
     @Id
@@ -20,19 +26,31 @@ public class Category {
     @JsonProperty("name")
     private String name; // Название категории
 
+    @Getter
     @JsonProperty("description")
     private String description; // Описание категории
 
     @JsonProperty("type")
     private String type; // Тип категории ('Локации'/'Маршруты')
 
-    @JsonProperty("created_at")
-    private LocalDateTime createdAt;
+    @Transient
+    @JsonProperty("apiType")
+    public String getApiType() {
+        if ("Локации".equals(this.type)) {
+            return "location";
+        }
+        if ("Маршруты".equals(this.type)) {
+            return "route";
+        }
+        return this.type;
+    }
 
-    /**
-     * Уникальный идентификатор категории
-     * @return id
-     */
+    public Category(String name, String description, String type) {
+        this.name = name;
+        this.description = description;
+        this.type = type;
+    }
+
     @Nonnull
     public Integer getId() {
         return id;
@@ -42,10 +60,6 @@ public class Category {
         this.id = id;
     }
 
-    /**
-     * Название категории
-     * @return name
-     */
     @Nonnull
     public String getName() {
         return name;
@@ -60,23 +74,10 @@ public class Category {
         return this;
     }
 
-    /**
-     * Описание категории
-     * @return description
-     */
-
-    public String getDescription() {
-        return description;
-    }
-
     public void setDescription(String description) {
         this.description = description;
     }
 
-    /**
-     * Тип категории
-     * @return type
-     */
     @Nonnull
     public String getType() {
         return type;
@@ -84,19 +85,6 @@ public class Category {
 
     public void setType(String type) {
         this.type = type;
-    }
-
-    /**
-     * Время создания категории
-     * @return createdAt
-     */
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
     }
 
     @Override
@@ -111,13 +99,12 @@ public class Category {
         return Objects.equals(this.id, category.id) &&
                 Objects.equals(this.name, category.name) &&
                 Objects.equals(this.description, category.description) &&
-                Objects.equals(this.type, category.type) &&
-                Objects.equals(this.createdAt, category.createdAt);
+                Objects.equals(this.type, category.type);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, type, createdAt);
+        return Objects.hash(id, name, description, type);
     }
 
     @Override
@@ -128,15 +115,10 @@ public class Category {
         sb.append(" name: ").append(toIndentedString(name)).append("\n");
         sb.append(" description: ").append(toIndentedString(description)).append("\n");
         sb.append(" type: ").append(toIndentedString(type)).append("\n");
-        sb.append(" createdAt: ").append(toIndentedString(createdAt)).append("\n");
         sb.append("}");
         return sb.toString();
     }
 
-    /**
-     * Convert the given object to string with each line indented by 4 spaces
-     * (except the first line).
-     */
     private String toIndentedString(Object o) {
         if (o == null) {
             return "null";

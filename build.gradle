@@ -27,6 +27,18 @@ dependencies {
 	implementation 'org.postgresql:postgresql:42.7.7' // PostgreSQL JDBC Driver
 	testImplementation 'org.springframework.boot:spring-boot-starter-test:2.5.6'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.7.2'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	// Для работы с .env файлами
+	implementation 'me.paulschwarz:spring-dotenv:4.0.0'
+
+	// AWS SDK для S3 (совместим с VK Cloud)
+	implementation 'software.amazon.awssdk:s3:2.20.47'
+
+	// Для работы с аннотациями (опционально, но удобно)
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
 }
 
 // Отключаем создание plain jar

@@ -1,25 +1,26 @@
-package com.example.spb4you_backend.models;
+package com.example.spb4you_backend.models.links;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.annotation.Nonnull;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.util.Objects;
 
-@Table("location_additional_info")
-public class LocationAddInfo {
+/**
+ * RoutePoint
+ */
+@Table("route_points")
+public class RoutePoint {
     @Id
     @JsonProperty("id")
     private Integer id;
 
-    @JsonProperty("location_id")
-    private Integer locationId;
+    @JsonProperty("route_id")
+    private Integer routeId;
 
-    @JsonProperty("title")
-    private String title;
-
-    @JsonProperty("description")
-    private String description;
+    @JsonProperty("point_id")
+    private Integer pointId;
 
     @JsonProperty("sort_order")
     private Integer sortOrder;
@@ -28,7 +29,7 @@ public class LocationAddInfo {
      * Уникальный идентификатор
      * @return id
      */
-
+    @Nonnull
     public Integer getId() {
         return id;
     }
@@ -38,46 +39,33 @@ public class LocationAddInfo {
     }
 
     /**
-     * ID локации
-     * @return locationId
+     * ID маршрута
+     * @return routeId
      */
 
-    public Integer getLocationId() {
-        return locationId;
+    public Integer getRouteId() {
+        return routeId;
     }
 
-    public void setLocationId(Integer locationId) {
-        this.locationId = locationId;
+    public void setRouteId(Integer routeId) {
+        this.routeId = routeId;
     }
 
     /**
-     * Заголовок
-     * @return title
+     * ID точки
+     * @return pointId
      */
 
-    public String getTitle() {
-        return title;
+    public Integer getPointId() {
+        return pointId;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setPointId(Integer pointId) {
+        this.pointId = pointId;
     }
 
     /**
-     * Описание
-     * @return description
-     */
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    /**
-     * Порядок сортировки
+     * Позиция точки в маршруте
      * @return sortOrder
      */
 
@@ -97,17 +85,16 @@ public class LocationAddInfo {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        LocationAddInfo addInfo = (LocationAddInfo) o;
-        return Objects.equals(this.id, addInfo.id) &&
-                Objects.equals(this.locationId, addInfo.locationId) &&
-                Objects.equals(this.title, addInfo.title) &&
-                Objects.equals(this.description, addInfo.description) &&
-                Objects.equals(this.sortOrder, addInfo.sortOrder);
+        RoutePoint routePoint = (RoutePoint) o;
+        return Objects.equals(this.id, routePoint.id) &&
+                Objects.equals(this.routeId, routePoint.routeId) &&
+                Objects.equals(this.pointId, routePoint.pointId) &&
+                Objects.equals(this.sortOrder, routePoint.sortOrder);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, locationId, title, description, sortOrder);
+        return Objects.hash(id, routeId, pointId, sortOrder);
     }
 
     @Override
@@ -115,9 +102,8 @@ public class LocationAddInfo {
         StringBuilder sb = new StringBuilder();
         sb.append("class Tag {\n");
         sb.append(" id: ").append(toIndentedString(id)).append("\n");
-        sb.append(" locationId: ").append(toIndentedString(locationId)).append("\n");
-        sb.append(" title: ").append(toIndentedString(title)).append("\n");
-        sb.append(" description: ").append(toIndentedString(description)).append("\n");
+        sb.append(" routeId: ").append(toIndentedString(routeId)).append("\n");
+        sb.append(" pointId: ").append(toIndentedString(pointId)).append("\n");
         sb.append(" sortOrder: ").append(toIndentedString(sortOrder)).append("\n");
         sb.append("}");
         return sb.toString();
@@ -134,3 +120,4 @@ public class LocationAddInfo {
         return o.toString().replace("\n", "\n ");
     }
 }
+

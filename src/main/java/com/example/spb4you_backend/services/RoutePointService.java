@@ -1,6 +1,6 @@
 package com.example.spb4you_backend.services;
 
-import com.example.spb4you_backend.models.RoutePoint;
+import com.example.spb4you_backend.models.links.RoutePoint;
 import com.example.spb4you_backend.repositories.RoutePointRepository;
 import org.springframework.stereotype.Service;
 

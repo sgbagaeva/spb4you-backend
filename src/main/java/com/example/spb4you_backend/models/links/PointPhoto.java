@@ -1,4 +1,4 @@
-package com.example.spb4you_backend.models;
+package com.example.spb4you_backend.models.links;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.data.annotation.Id;
@@ -21,6 +21,12 @@ public class PointPhoto {
 
     @JsonProperty("sort_order")
     private Integer sortOrder;
+
+    public PointPhoto(Integer pointId, Integer photoId, Integer sortOrder) {
+        this.pointId = pointId;
+        this.photoId = photoId;
+        this.sortOrder = sortOrder;
+    }
 
     /**
      * Уникальный идентификатор

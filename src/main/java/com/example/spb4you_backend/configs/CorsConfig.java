@@ -1,4 +1,4 @@
-package com.example.spb4you_backend;
+package com.example.spb4you_backend.configs;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;

@@ -1,20 +1,24 @@
 package com.example.spb4you_backend.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.annotation.Nonnull;
+import lombok.Getter;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.relational.core.mapping.Table;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 /**
- * Route
+ * Route - Сущность маршрута
  */
 @Table(name = "routes")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Route {
+
     @Id
     @JsonProperty("id")
     private Integer id;
@@ -22,40 +26,54 @@ public class Route {
     @JsonProperty("name")
     private String name;
 
+    @Getter
     @JsonProperty("description")
     private String description;
 
+    @Getter
     @JsonProperty("likes")
     private Integer likes;
 
-    @JsonProperty("tags")
-    private List<Integer> tags = new ArrayList<>();
+    @JsonProperty("tag_ids")
+    private List<Integer> tagIds = new ArrayList<>();
 
-    @JsonProperty("categories")
-    private List<Integer> categories = new ArrayList<>();
+    @JsonProperty("category_ids")
+    private List<Integer> categoryIds = new ArrayList<>();
 
-    @JsonProperty("main_photo_url")
-    private String mainPhotoUrl;
+    @Getter
+    @JsonProperty("main_photo_id")
+    private Integer mainPhotoId;
 
+    @Getter
     @JsonProperty("distance")
     private Double distance;
 
+    @Getter
     @JsonProperty("time")
     private Integer time;
 
+    @Getter
     @JsonProperty("steps")
     private Integer steps;
 
-    @JsonProperty("created_at")
-    private LocalDateTime createdAt;
-
-    @JsonProperty("updated_at")
-    private LocalDateTime updatedAt;
-
     /**
-     * Уникальный идентификатор маршрута
-     * @return id
+     * Транзиентные поля (не сохраняются в БД)
      */
+    @Transient
+    @JsonProperty("photos")
+    private List<Photo> photos = new ArrayList<>();
+
+    @Transient
+    @JsonProperty("points")
+    private List<Point> points = new ArrayList<>();
+
+    @Getter
+    @Transient
+    @JsonProperty("main_photo_url")
+    private String mainPhotoUrl;
+
+    // ===== Геттеры и сеттеры =====
+
     @Nonnull
     public Integer getId() {
         return id;
@@ -65,10 +83,6 @@ public class Route {
         this.id = id;
     }
 
-    /**
-     * Название маршрута
-     * @return name
-     */
     @Nonnull
     public String getName() {
         return name;
@@ -78,148 +92,105 @@ public class Route {
         this.name = name;
     }
 
-    /**
-     * Описание маршрута
-     * @return description
-     */
-
-    public String getDescription() {
-        return description;
-    }
-
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    /**
-     * Количество лайков маршрута
-     * @return likes
-     */
-    public Integer getLikes() {
-        return likes;
     }
 
     public void setLikes(Integer likes) {
         this.likes = likes;
     }
 
-    /**
-     * Теги маршрута
-     * @return tags
-     */
-    public List<Integer> getTags() {
-        return tags;
+    public List<Integer> getTagIds() {
+        return tagIds != null ? tagIds : new ArrayList<>();
     }
 
-    public void setTags(List<Integer> tags) {
-        this.tags = tags != null ? tags : new ArrayList<>();
+    public void setTagIds(List<Integer> tagIds) {
+        this.tagIds = tagIds != null ? tagIds : new ArrayList<>();
     }
 
-    /**
-     * Категории маршрута
-     * @return categories
-     */
-
-    public List<Integer> getCategories() {
-        return categories;
+    public List<Integer> getCategoryIds() {
+        return categoryIds != null ? categoryIds : new ArrayList<>();
     }
 
-    public void setCategories(List<Integer> categories) {
-        this.categories = categories != null ? categories : new ArrayList<>();
+    public void setCategoryIds(List<Integer> categoryIds) {
+        this.categoryIds = categoryIds != null ? categoryIds : new ArrayList<>();
     }
 
-    /**
-     * Ссылка на главное фото маршрута
-     * @return mainPhotoUrl
-     */
+    public void setMainPhotoId(Integer mainPhotoId) {
+        this.mainPhotoId = mainPhotoId;
+    }
 
-    public String getMainPhotoUrl() {
-        return mainPhotoUrl;
+    public void setDistance(Double distance) {
+        this.distance = distance;
+    }
+
+    public void setTime(Integer time) {
+        this.time = time;
     }
 
     public void setMainPhotoUrl(String mainPhotoUrl) {
         this.mainPhotoUrl = mainPhotoUrl;
     }
 
-    /**
-     * Время создания локации
-     * @return createdAt
-     */
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
+    public void setSteps(Integer steps) {
+        this.steps = steps;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
+    // ===== Транзиентные поля =====
+
+    public List<Photo> getPhotos() {
+        return photos != null ? photos : new ArrayList<>();
     }
 
-    /**
-     * Время обновления локации
-     * @return updatedAt
-     */
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
+    public void setPhotos(List<Photo> photos) {
+        this.photos = photos != null ? photos : new ArrayList<>();
     }
 
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
+    public List<Point> getPoints() {
+        return points != null ? points : new ArrayList<>();
     }
+
+    public void setPoints(List<Point> points) {
+        this.points = points != null ? points : new ArrayList<>();
+    }
+
+    // ===== Equals, HashCode, ToString =====
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         Route route = (Route) o;
-        return Objects.equals(this.id, route.id) &&
-                Objects.equals(this.name, route.name) &&
-                Objects.equals(this.description, route.description) &&
-                Objects.equals(this.likes, route.likes) &&
-                Objects.equals(this.tags, route.tags) &&
-                Objects.equals(this.categories, route.categories) &&
-                Objects.equals(this.mainPhotoUrl, route.mainPhotoUrl) &&
-                Objects.equals(this.distance, route.distance) &&
-                Objects.equals(this.time, route.time) &&
-                Objects.equals(this.steps, route.steps) &&
-                Objects.equals(this.createdAt, route.createdAt) &&
-                Objects.equals(this.updatedAt, route.updatedAt);
+        return Objects.equals(id, route.id) &&
+                Objects.equals(name, route.name) &&
+                Objects.equals(description, route.description) &&
+                Objects.equals(likes, route.likes) &&
+                Objects.equals(tagIds, route.tagIds) &&
+                Objects.equals(categoryIds, route.categoryIds) &&
+                Objects.equals(mainPhotoId, route.mainPhotoId) &&
+                Objects.equals(distance, route.distance) &&
+                Objects.equals(time, route.time) &&
+                Objects.equals(steps, route.steps);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, likes, tags, categories,
-                mainPhotoUrl, distance, time, steps, createdAt, updatedAt);
+        return Objects.hash(id, name, description, likes, tagIds, categoryIds, mainPhotoId, distance, time, steps);
     }
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("class Route {\n");
-        sb.append(" id: ").append(toIndentedString(id)).append("\n");
-        sb.append(" name: ").append(toIndentedString(name)).append("\n");
-        sb.append(" description: ").append(toIndentedString(description)).append("\n");
-        sb.append(" likes: ").append(toIndentedString(likes)).append("\n");
-        sb.append(" tags: ").append(toIndentedString(tags)).append("\n");
-        sb.append(" categories: ").append(toIndentedString(categories)).append("\n");
-        sb.append(" mainPhotoUrl: ").append(toIndentedString(mainPhotoUrl)).append("\n");
-        sb.append(" distance: ").append(toIndentedString(distance)).append("\n");
-        sb.append(" time: ").append(toIndentedString(time)).append("\n");
-        sb.append(" steps: ").append(toIndentedString(steps)).append("\n");
-        sb.append(" createdAt: ").append(toIndentedString(createdAt)).append("\n");
-        sb.append(" updatedAt: ").append(toIndentedString(updatedAt)).append("\n");
-        sb.append("}");
-        return sb.toString();
-    }
-
-    private String toIndentedString(Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n ");
+        return "Route{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", likes=" + likes +
+                ", tagIds=" + tagIds +
+                ", categoryIds=" + categoryIds +
+                ", mainPhotoId=" + mainPhotoId +
+                ", distance=" + distance +
+                ", time=" + time +
+                ", steps=" + steps +
+                '}';
     }
 }

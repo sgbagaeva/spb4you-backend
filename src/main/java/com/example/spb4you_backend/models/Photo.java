@@ -1,105 +1,87 @@
 package com.example.spb4you_backend.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.annotation.Nonnull;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.relational.core.mapping.Table;
 
-import java.time.LocalDateTime;
 import java.util.Objects;
 
-/**
- * Photo
- */
 @Table(name = "photos")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Photo {
+
     @Id
     @JsonProperty("id")
     private Integer id;
 
-    @JsonProperty("link")
-    private String link;
+    @JsonProperty("filename")
+    private String filename;
 
-    @JsonProperty("uploaded_at")
-    private LocalDateTime uploadedAt;
+    @JsonProperty("size")
+    private Long size;
 
-    /**
-     * Уникальный идентификатор фотографии
-     * @return id
-     */
-    @Nonnull
-    public Integer getId() {
-        return id;
+    @JsonProperty("mime_type")
+    private String mimeType;
+
+    @JsonProperty("file_key")
+    private String fileKey;
+
+    @Transient
+    @JsonProperty("url")
+    private String url;
+
+    public Photo() {}
+
+    public Photo(String filename, Long size, String mimeType, String fileKey) {
+        this.filename = filename;
+        this.size = size;
+        this.mimeType = mimeType;
+        this.fileKey = fileKey;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    // Геттеры
+    public Integer getId() { return id; }
+    public String getFilename() { return filename; }
+    public Long getSize() { return size; }
+    public String getMimeType() { return mimeType; }
+    public String getFileKey() { return fileKey; }
+    public String getUrl() { return url; }
 
-    /**
-     * Ссылка на изображение
-     * @return link
-     */
-    public String getLink() {
-        return link;
-    }
-
-    public void setLink(String link) {
-        this.link = link;
-    }
-
-    /**
-     * Дата создания
-     * @return created_at
-     */
-
-    LocalDateTime getUploadedAt() {
-        return uploadedAt;
-    }
-
-    void setUploadedAt(LocalDateTime uploadedAt) {
-        this.uploadedAt = uploadedAt;
-    }
+    // Сеттеры
+    public void setId(Integer id) { this.id = id; }
+    public void setFilename(String filename) { this.filename = filename; }
+    public void setSize(Long size) { this.size = size; }
+    public void setMimeType(String mimeType) { this.mimeType = mimeType; }
+    public void setFileKey(String fileKey) { this.fileKey = fileKey; }
+    public void setUrl(String url) { this.url = url; }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         Photo photo = (Photo) o;
-        return Objects.equals(this.id, photo.id) &&
-                Objects.equals(this.link, photo.link) &&
-                Objects.equals(this.uploadedAt, photo.uploadedAt);
+        return Objects.equals(id, photo.id) &&
+                Objects.equals(filename, photo.filename) &&
+                Objects.equals(size, photo.size) &&
+                Objects.equals(mimeType, photo.mimeType) &&
+                Objects.equals(fileKey, photo.fileKey);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, link, uploadedAt);
+        return Objects.hash(id, filename, size, mimeType, fileKey);
     }
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("class Photo {\n");
-        sb.append(" id: ").append(toIndentedString(id)).append("\n");
-        sb.append(" link: ").append(toIndentedString(link)).append("\n");
-        sb.append(" uploaded_at: ").append(toIndentedString(uploadedAt)).append("\n");
-        sb.append("}");
-        return sb.toString();
-    }
-
-    /**
-     * Convert the given object to string with each line indented by 4 spaces
-     * (except the first line).
-     */
-    private String toIndentedString(Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n ");
+        return "Photo{" +
+                "id=" + id +
+                ", filename='" + filename + '\'' +
+                ", size=" + size +
+                ", mimeType='" + mimeType + '\'' +
+                ", fileKey='" + fileKey + '\'' +
+                '}';
     }
 }
-

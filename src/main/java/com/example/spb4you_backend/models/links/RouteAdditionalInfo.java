@@ -1,29 +1,48 @@
-package com.example.spb4you_backend.models;
+package com.example.spb4you_backend.models.links;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.annotation.Nonnull;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.util.Objects;
 
-/**
- * RoutePoint
- */
-@Table("route_points")
-public class RoutePoint {
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Table(name = "route_additional_info")
+public class RouteAdditionalInfo {
     @Id
     @JsonProperty("id")
     private Integer id;
 
+    /**
+     * -- GETTER --
+     *  ID локации
+     *
+     * @return locationId
+     */
+    @Getter
     @JsonProperty("route_id")
     private Integer routeId;
 
-    @JsonProperty("point_id")
-    private Integer pointId;
+    /**
+     * -- GETTER --
+     *  ID дополнительной информации
+     *
+     * @return additionalInfoId
+     */
+    @Getter
+    @JsonProperty("additional_info_id")
+    private Integer additionalInfoId;
 
-    @JsonProperty("sort_order")
-    private Integer sortOrder;
+    public RouteAdditionalInfo(Integer routeId, Integer additionalInfoId) {
+        this.routeId = routeId;
+        this.additionalInfoId = additionalInfoId;
+    }
 
     /**
      * Уникальный идентификатор
@@ -38,43 +57,12 @@ public class RoutePoint {
         this.id = id;
     }
 
-    /**
-     * ID маршрута
-     * @return routeId
-     */
-
-    public Integer getRouteId() {
-        return routeId;
-    }
-
     public void setRouteId(Integer routeId) {
         this.routeId = routeId;
     }
 
-    /**
-     * ID точки
-     * @return pointId
-     */
-
-    public Integer getPointId() {
-        return pointId;
-    }
-
-    public void setPointId(Integer pointId) {
-        this.pointId = pointId;
-    }
-
-    /**
-     * Позиция точки в маршруте
-     * @return sortOrder
-     */
-
-    public Integer getSortOrder() {
-        return sortOrder;
-    }
-
-    public void setSortOrder(Integer sortOrder) {
-        this.sortOrder = sortOrder;
+    public void setAdditionalInfoId(Integer additionalInfoId) {
+        this.additionalInfoId = additionalInfoId;
     }
 
     @Override
@@ -85,16 +73,15 @@ public class RoutePoint {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        RoutePoint routePoint = (RoutePoint) o;
-        return Objects.equals(this.id, routePoint.id) &&
-                Objects.equals(this.routeId, routePoint.routeId) &&
-                Objects.equals(this.pointId, routePoint.pointId) &&
-                Objects.equals(this.sortOrder, routePoint.sortOrder);
+        RouteAdditionalInfo routeAdditInfo = (RouteAdditionalInfo) o;
+        return Objects.equals(this.id, routeAdditInfo.id) &&
+                Objects.equals(this.routeId, routeAdditInfo.routeId) &&
+                Objects.equals(this.additionalInfoId, routeAdditInfo.additionalInfoId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, routeId, pointId, sortOrder);
+        return Objects.hash(id, routeId, additionalInfoId);
     }
 
     @Override
@@ -103,8 +90,7 @@ public class RoutePoint {
         sb.append("class Tag {\n");
         sb.append(" id: ").append(toIndentedString(id)).append("\n");
         sb.append(" routeId: ").append(toIndentedString(routeId)).append("\n");
-        sb.append(" pointId: ").append(toIndentedString(pointId)).append("\n");
-        sb.append(" sortOrder: ").append(toIndentedString(sortOrder)).append("\n");
+        sb.append(" additionalInfoId: ").append(toIndentedString(additionalInfoId)).append("\n");
         sb.append("}");
         return sb.toString();
     }
