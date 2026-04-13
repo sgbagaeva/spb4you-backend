@@ -11,7 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/locations")
@@ -83,7 +85,7 @@ public class LocationsController {
     }
 
     /**
-     * PUT /locations/{id}
+     * PUT /locations/{id} - полное обновление локации
      * @param id
      * @param location
      * @return
@@ -104,6 +106,82 @@ public class LocationsController {
             return ResponseEntity.notFound().build();
         } catch (Exception e) {
             logger.error("Ошибка при обновлении локации {}: {}", id, e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    /**
+     * PATCH /locations/{id} - частичное обновление локации
+     * @param id
+     * @param updates
+     * @return
+     */
+    @PatchMapping("/{id}")
+    public ResponseEntity<Location> patchLocation(
+            @PathVariable Integer id,
+            @RequestBody Map<String, Object> updates) {
+        try {
+            logger.info("PATCH запрос для локации {} с данными: {}", id, updates);
+            Location location = locationService.getLocationById(id);
+
+            // Обновляем только те поля, которые пришли в запросе
+            if (updates.containsKey("name")) {
+                String name = (String) updates.get("name");
+                if (name != null && !name.trim().isEmpty()) {
+                    location.setName(name);
+                }
+            }
+
+            if (updates.containsKey("description")) {
+                location.setDescription((String) updates.get("description"));
+            }
+
+            if (updates.containsKey("main_photo_id")) {
+                Integer mainPhotoId = (Integer) updates.get("main_photo_id");
+                location.setMainPhotoId(mainPhotoId);
+            }
+
+            if (updates.containsKey("mainPhotoId")) {
+                Integer mainPhotoId = (Integer) updates.get("mainPhotoId");
+                location.setMainPhotoId(mainPhotoId);
+            }
+
+            if (updates.containsKey("photo_ids")) {
+                @SuppressWarnings("unchecked")
+                List<Integer> photoIds = (List<Integer>) updates.get("photo_ids");
+                location.setPhotoIds(photoIds);
+            }
+
+            if (updates.containsKey("photoIds")) {
+                @SuppressWarnings("unchecked")
+                List<Integer> photoIds = (List<Integer>) updates.get("photoIds");
+                location.setPhotoIds(photoIds);
+            }
+
+            if (updates.containsKey("category_ids")) {
+                @SuppressWarnings("unchecked")
+                List<Integer> categoryIds = (List<Integer>) updates.get("category_ids");
+                location.setCategoryIds(categoryIds);
+            }
+
+            if (updates.containsKey("tag_ids")) {
+                @SuppressWarnings("unchecked")
+                List<Integer> tagIds = (List<Integer>) updates.get("tag_ids");
+                location.setTagIds(tagIds);
+            }
+
+            if (updates.containsKey("likes")) {
+                Integer likes = (Integer) updates.get("likes");
+                location.setLikes(likes);
+            }
+
+            Location updatedLocation = locationService.updateLocation(id, location);
+            return ResponseEntity.ok(updatedLocation);
+        } catch (RuntimeException e) {
+            logger.error("Локация {} не найдена: {}", id, e.getMessage());
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            logger.error("Ошибка при частичном обновлении локации {}: {}", id, e.getMessage(), e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -177,6 +255,11 @@ public class LocationsController {
         }
     }
 
+    /**
+     * GET /locations/{id}/photos
+     * @param id
+     * @return
+     */
     @GetMapping("/{id}/photos")
     public ResponseEntity<List<Photo>> getLocationPhotos(@PathVariable Integer id) {
         try {
@@ -191,15 +274,21 @@ public class LocationsController {
         }
     }
 
+    /**
+     * POST /locations/{id}/photos - загрузка нескольких фотографий
+     * @param id
+     * @param photos
+     * @return
+     */
     @PostMapping("/{id}/photos")
     public ResponseEntity<List<Photo>> uploadLocationPhotos(
             @PathVariable Integer id,
-            @RequestParam("photos") List<MultipartFile> photos) {
+            @RequestParam("photos") MultipartFile[] photos) {
         try {
-            if (photos == null || photos.isEmpty()) {
+            if (photos == null || photos.length == 0) {
                 return ResponseEntity.badRequest().build();
             }
-            List<Photo> uploadedPhotos = locationService.uploadLocationPhotos(id, photos);
+            List<Photo> uploadedPhotos = locationService.uploadLocationPhotos(id, Arrays.asList(photos));
             return ResponseEntity.ok(uploadedPhotos);
         } catch (RuntimeException e) {
             logger.error("Локация {} не найдена: {}", id, e.getMessage());
@@ -210,6 +299,12 @@ public class LocationsController {
         }
     }
 
+    /**
+     * DELETE /locations/{id}/photos/{photoId}
+     * @param id
+     * @param photoId
+     * @return
+     */
     @DeleteMapping("/{id}/photos/{photoId}")
     public ResponseEntity<Void> deleteLocationPhoto(
             @PathVariable Integer id,
@@ -227,7 +322,7 @@ public class LocationsController {
     }
 
     /**
-     * GET /locations/{id}/additional-info - получение дополнительной информации локации
+     * GET /locations/{id}/additional-info
      * @param id
      * @return
      */
@@ -246,7 +341,7 @@ public class LocationsController {
     }
 
     /**
-     * POST /locations/{id}/additional-info - добавление блока дополнительной информации
+     * POST /locations/{id}/additional-info
      * @param id
      * @param additionalInfo
      * @return
@@ -268,7 +363,7 @@ public class LocationsController {
     }
 
     /**
-     * PUT /locations/{id}/additional-info/{infoId} - обновление блока дополнительной информации
+     * PUT /locations/{id}/additional-info/{infoId}
      * @param id
      * @param infoId
      * @param additionalInfo
@@ -292,7 +387,7 @@ public class LocationsController {
     }
 
     /**
-     * DELETE /locations/{id}/additional-info/{infoId} - удаление блока дополнительной информации
+     * DELETE /locations/{id}/additional-info/{infoId}
      * @param id
      * @param infoId
      * @return
@@ -314,7 +409,7 @@ public class LocationsController {
     }
 
     /**
-     * GET /locations/{id}/points - получение всех точек локации
+     * GET /locations/{id}/points
      * @param id
      * @return
      */
@@ -333,7 +428,7 @@ public class LocationsController {
     }
 
     /**
-     * POST /locations/{id}/points - добавление точки к локации
+     * POST /locations/{id}/points
      * @param id
      * @param point
      * @return
@@ -355,7 +450,7 @@ public class LocationsController {
     }
 
     /**
-     * PUT /locations/{id}/points/{pointId} - обновление точки
+     * PUT /locations/{id}/points/{pointId}
      * @param id
      * @param pointId
      * @param point
@@ -379,7 +474,55 @@ public class LocationsController {
     }
 
     /**
-     * DELETE /locations/{id}/points/{pointId} - удаление точки из локации
+     * PATCH /locations/{id}/points/{pointId} - частичное обновление точки
+     * @param id
+     * @param pointId
+     * @param updates
+     * @return
+     */
+    @PatchMapping("/{id}/points/{pointId}")
+    public ResponseEntity<Point> patchPoint(
+            @PathVariable Integer id,
+            @PathVariable Integer pointId,
+            @RequestBody Map<String, Object> updates) {
+        try {
+            logger.info("PATCH запрос для точки {} локации {} с данными: {}", pointId, id, updates);
+            Point point = locationService.getPointById(id, pointId);
+
+            if (updates.containsKey("name")) {
+                String name = (String) updates.get("name");
+                if (name != null && !name.trim().isEmpty()) {
+                    point.setName(name);
+                }
+            }
+
+            if (updates.containsKey("description")) {
+                point.setDescription((String) updates.get("description"));
+            }
+
+            if (updates.containsKey("latitude")) {
+                Double latitude = (Double) updates.get("latitude");
+                point.setLatitude(latitude);
+            }
+
+            if (updates.containsKey("longitude")) {
+                Double longitude = (Double) updates.get("longitude");
+                point.setLongitude(longitude);
+            }
+
+            Point updatedPoint = locationService.updatePoint(id, pointId, point);
+            return ResponseEntity.ok(updatedPoint);
+        } catch (RuntimeException e) {
+            logger.error("Локация {} или точка {} не найдены: {}", id, pointId, e.getMessage());
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            logger.error("Ошибка при частичном обновлении точки {} для локации {}: {}", pointId, id, e.getMessage(), e);
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    /**
+     * DELETE /locations/{id}/points/{pointId}
      * @param id
      * @param pointId
      * @return

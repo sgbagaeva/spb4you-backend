@@ -114,6 +114,47 @@ public class LocationService extends GenericService<Location, Integer> {
         return null;
     }
 
+    @Transactional(readOnly = true)
+    public Point getPointById(Integer locationId, Integer pointId) {
+        // Проверяем существование локации
+        getLocationById(locationId);
+
+        // Проверяем существование связи
+        Optional<LocationPoint> linkOpt = locationPointRepository.findByLocationIdAndPointId(locationId, pointId);
+        if (linkOpt.isEmpty()) {
+            throw new RuntimeException("Точка с ID " + pointId + " не найдена для локации " + locationId);
+        }
+
+        // Получаем точку
+        Optional<Point> pointOpt = pointRepository.findById(pointId);
+        if (pointOpt.isEmpty()) {
+            throw new RuntimeException("Точка с ID " + pointId + " не найдена");
+        }
+
+        Point point = pointOpt.get();
+
+        // Загружаем фото точки
+        List<PointPhoto> pointPhotos = pointPhotoRepository.findAllByPointId(point.getId());
+        List<Photo> pointPhotoList = new ArrayList<>();
+        for (PointPhoto pp : pointPhotos) {
+            Optional<Photo> photoOpt = photoRepository.findById(pp.getPhotoId());
+            if (photoOpt.isPresent()) {
+                Photo photo = photoOpt.get();
+                try {
+                    String url = storageService.getFileUrl(photo.getFileKey());
+                    photo.setUrl(url);
+                    pointPhotoList.add(photo);
+                } catch (Exception e) {
+                    logger.error("Ошибка получения URL для фото {}: {}", photo.getId(), e.getMessage());
+                    photoRepository.deleteById(photo.getId());
+                }
+            }
+        }
+        point.setPhotos(pointPhotoList);
+
+        return point;
+    }
+
     private void loadLocationRelations(Location location) {
         // Загружаем дополнительную информацию
         List<LocationAdditionalInfo> locationInfo = locationAdditionalInfoRepository
@@ -274,45 +315,65 @@ public class LocationService extends GenericService<Location, Integer> {
             existingLocation.setMainPhotoId(location.getMainPhotoId());
         }
 
+        // Обновляем photoIds если переданы
+        if (location.getPhotoIds() != null) {
+            existingLocation.setPhotoIds(location.getPhotoIds());
+        }
+
+        // Обновляем categoryIds если переданы
+        if (location.getCategoryIds() != null) {
+            existingLocation.setCategoryIds(location.getCategoryIds());
+        }
+
+        // Обновляем tagIds если переданы
+        if (location.getTagIds() != null) {
+            existingLocation.setTagIds(location.getTagIds());
+        }
+
         locationRepository.save(existingLocation);
 
-        // Обновляем дополнительную информацию
-        locationAdditionalInfoRepository.deleteByLocationId(id);
+        // Обновляем дополнительную информацию только если она передана
+        if (location.getAdditionalInfo() != null) {
+            locationAdditionalInfoRepository.deleteByLocationId(id);
 
-        if (location.getAdditionalInfo() != null && !location.getAdditionalInfo().isEmpty()) {
-            for (int i = 0; i < location.getAdditionalInfo().size(); i++) {
-                AdditionalInfo info = location.getAdditionalInfo().get(i);
+            if (!location.getAdditionalInfo().isEmpty()) {
+                for (int i = 0; i < location.getAdditionalInfo().size(); i++) {
+                    AdditionalInfo info = location.getAdditionalInfo().get(i);
 
-                AdditionalInfo savedInfo;
-                if (info.getId() != null) {
-                    Optional<AdditionalInfo> existingInfo = additionalInfoRepository.findById(info.getId());
-                    if (existingInfo.isPresent()) {
-                        savedInfo = existingInfo.get();
-                        savedInfo.setTitle(info.getTitle());
-                        savedInfo.setDescription(info.getDescription());
-                        savedInfo = additionalInfoRepository.save(savedInfo);
+                    AdditionalInfo savedInfo;
+                    if (info.getId() != null) {
+                        Optional<AdditionalInfo> existingInfo = additionalInfoRepository.findById(info.getId());
+                        if (existingInfo.isPresent()) {
+                            savedInfo = existingInfo.get();
+                            savedInfo.setTitle(info.getTitle());
+                            savedInfo.setDescription(info.getDescription());
+                            savedInfo = additionalInfoRepository.save(savedInfo);
+                        } else {
+                            savedInfo = new AdditionalInfo();
+                            savedInfo.setTitle(info.getTitle());
+                            savedInfo.setDescription(info.getDescription());
+                            savedInfo = additionalInfoRepository.save(savedInfo);
+                        }
                     } else {
                         savedInfo = new AdditionalInfo();
                         savedInfo.setTitle(info.getTitle());
                         savedInfo.setDescription(info.getDescription());
                         savedInfo = additionalInfoRepository.save(savedInfo);
                     }
-                } else {
-                    savedInfo = new AdditionalInfo();
-                    savedInfo.setTitle(info.getTitle());
-                    savedInfo.setDescription(info.getDescription());
-                    savedInfo = additionalInfoRepository.save(savedInfo);
-                }
 
-                LocationAdditionalInfo link = new LocationAdditionalInfo();
-                link.setLocationId(id);
-                link.setAdditionalInfoId(savedInfo.getId());
-                link.setSortOrder(i);
-                locationAdditionalInfoRepository.save(link);
+                    LocationAdditionalInfo link = new LocationAdditionalInfo();
+                    link.setLocationId(id);
+                    link.setAdditionalInfoId(savedInfo.getId());
+                    link.setSortOrder(i);
+                    locationAdditionalInfoRepository.save(link);
+                }
             }
         }
 
-        updatePoints(id, location.getPoints());
+        // Обновляем точки только если они переданы
+        if (location.getPoints() != null) {
+            updatePoints(id, location.getPoints());
+        }
 
         return getLocationById(id);
     }
