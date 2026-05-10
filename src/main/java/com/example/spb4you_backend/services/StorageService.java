@@ -89,6 +89,36 @@ public class StorageService {
     }
 
     /**
+     * Сохраняет фотографии маршрута (загрузка сразу в облако)
+     * @param routeId ID маршрута
+     * @param files список файлов для загрузки
+     * @return список Photo с информацией о загруженных фото
+     */
+    public List<Photo> saveRoutePhotos(Integer routeId, List<MultipartFile> files) {
+        List<Photo> uploadedPhotos = new ArrayList<>();
+
+        if (files == null || files.isEmpty()) {
+            logger.info("Нет файлов для загрузки");
+            return uploadedPhotos;
+        }
+
+        logger.info("Начинаем загрузку {} фото для маршрута ID: {}", files.size(), routeId);
+
+        for (MultipartFile file : files) {
+            try {
+                Photo photo = uploadFileAndCreatePhoto(file, "routes", routeId);
+                uploadedPhotos.add(photo);
+                logger.debug("Фото загружено: {}", photo.getFileKey());
+            } catch (Exception e) {
+                logger.error("Ошибка при загрузке файла {}: {}", file.getOriginalFilename(), e.getMessage());
+            }
+        }
+
+        logger.info("Успешно загружено {} из {} фото", uploadedPhotos.size(), files.size());
+        return uploadedPhotos;
+    }
+
+    /**
      * Сохраняет фотографии для конкретной точки
      * @param pointId ID точки
      * @param files список файлов

@@ -19,35 +19,20 @@ public class RouteAdditionalInfo {
     @JsonProperty("id")
     private Integer id;
 
-    /**
-     * -- GETTER --
-     *  ID локации
-     *
-     * @return locationId
-     */
-    @Getter
     @JsonProperty("route_id")
     private Integer routeId;
 
-    /**
-     * -- GETTER --
-     *  ID дополнительной информации
-     *
-     * @return additionalInfoId
-     */
-    @Getter
     @JsonProperty("additional_info_id")
     private Integer additionalInfoId;
+
+    @JsonProperty("sort_order")
+    private Integer sortOrder = 0;
 
     public RouteAdditionalInfo(Integer routeId, Integer additionalInfoId) {
         this.routeId = routeId;
         this.additionalInfoId = additionalInfoId;
     }
 
-    /**
-     * Уникальный идентификатор
-     * @return id
-     */
     @Nonnull
     public Integer getId() {
         return id;
@@ -65,6 +50,10 @@ public class RouteAdditionalInfo {
         this.additionalInfoId = additionalInfoId;
     }
 
+    public void setSortOrder(Integer sortOrder) {
+        this.sortOrder = sortOrder != null ? sortOrder : 0;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -76,12 +65,13 @@ public class RouteAdditionalInfo {
         RouteAdditionalInfo routeAdditInfo = (RouteAdditionalInfo) o;
         return Objects.equals(this.id, routeAdditInfo.id) &&
                 Objects.equals(this.routeId, routeAdditInfo.routeId) &&
-                Objects.equals(this.additionalInfoId, routeAdditInfo.additionalInfoId);
+                Objects.equals(this.additionalInfoId, routeAdditInfo.additionalInfoId) &&
+                Objects.equals(this.sortOrder, routeAdditInfo.sortOrder);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, routeId, additionalInfoId);
+        return Objects.hash(id, routeId, additionalInfoId, sortOrder);
     }
 
     @Override
@@ -91,6 +81,7 @@ public class RouteAdditionalInfo {
         sb.append(" id: ").append(toIndentedString(id)).append("\n");
         sb.append(" routeId: ").append(toIndentedString(routeId)).append("\n");
         sb.append(" additionalInfoId: ").append(toIndentedString(additionalInfoId)).append("\n");
+        sb.append(" sortOrder: ").append(toIndentedString(sortOrder)).append("\n");
         sb.append("}");
         return sb.toString();
     }

@@ -40,6 +40,9 @@ public class Route {
     @JsonProperty("category_ids")
     private List<Integer> categoryIds = new ArrayList<>();
 
+    @JsonProperty("photo_ids")
+    private List<Integer> photoIds = new ArrayList<>();
+
     @Getter
     @JsonProperty("main_photo_id")
     private Integer mainPhotoId;
@@ -66,6 +69,10 @@ public class Route {
     @Transient
     @JsonProperty("points")
     private List<Point> points = new ArrayList<>();
+
+    @Transient
+    @JsonProperty("additionalInfo")
+    private List<AdditionalInfo> additionalInfo = new ArrayList<>();
 
     @Getter
     @Transient
@@ -115,6 +122,9 @@ public class Route {
     public void setCategoryIds(List<Integer> categoryIds) {
         this.categoryIds = categoryIds != null ? categoryIds : new ArrayList<>();
     }
+    public List<Integer> getPhotoIds() { return photoIds != null ? photoIds : new ArrayList<>(); }
+    public void setPhotoIds(List<Integer> photoIds) { this.photoIds = photoIds != null ? photoIds : new ArrayList<>(); }
+    public void addPhotoId(Integer photoId) { this.photoIds.add(photoId); }
 
     public void setMainPhotoId(Integer mainPhotoId) {
         this.mainPhotoId = mainPhotoId;
@@ -136,7 +146,7 @@ public class Route {
         this.steps = steps;
     }
 
-    // ===== Транзиентные поля =====
+    // Транзиентные поля
 
     public List<Photo> getPhotos() {
         return photos != null ? photos : new ArrayList<>();
@@ -154,7 +164,9 @@ public class Route {
         this.points = points != null ? points : new ArrayList<>();
     }
 
-    // ===== Equals, HashCode, ToString =====
+    public List<AdditionalInfo> getAdditionalInfo() { return additionalInfo != null ? additionalInfo : new ArrayList<>(); }
+    public void setAdditionalInfo(List<AdditionalInfo> additionalInfo) { this.additionalInfo = additionalInfo != null ? additionalInfo : new ArrayList<>(); }
+
 
     @Override
     public boolean equals(Object o) {

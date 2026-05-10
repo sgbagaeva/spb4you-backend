@@ -230,7 +230,7 @@ public class LocationService extends GenericService<Location, Integer> {
 
     @Transactional
     public Location createLocation(Location location) {
-        logger.info("=== СОЗДАНИЕ ЛОКАЦИИ ===");
+        logger.info("СОЗДАНИЕ ЛОКАЦИИ");
 
         if (locationRepository.findByName(location.getName()).isPresent()) {
             throw new RuntimeException("Локация с таким названием уже существует");
@@ -271,7 +271,7 @@ public class LocationService extends GenericService<Location, Integer> {
                 Point point = location.getPoints().get(i);
 
                 Point savedPoint = new Point();
-                savedPoint.setName(point.getName() != null ? point.getName() : "");
+                savedPoint.setName(point.getName());
                 savedPoint.setDescription(point.getDescription() != null ? point.getDescription() : "");
                 savedPoint.setLatitude(point.getLatitude());
                 savedPoint.setLongitude(point.getLongitude());
@@ -299,7 +299,7 @@ public class LocationService extends GenericService<Location, Integer> {
 
     @Transactional
     public Location updateLocation(Integer id, Location location) {
-        logger.info("=== ОБНОВЛЕНИЕ ЛОКАЦИИ ID: {} ===", id);
+        logger.info("ОБНОВЛЕНИЕ ЛОКАЦИИ ID: {}", id);
 
         Optional<Location> locationOpt = locationRepository.findById(id);
         if (locationOpt.isEmpty()) {
@@ -467,7 +467,7 @@ public class LocationService extends GenericService<Location, Integer> {
 
     @Transactional
     public void deleteLocation(Integer id) {
-        logger.info("=== НАЧАЛО УДАЛЕНИЯ ЛОКАЦИИ ID: {} ===", id);
+        logger.info("НАЧАЛО УДАЛЕНИЯ ЛОКАЦИИ ID: {}", id);
 
         try {
             // 1. Получаем локацию со всеми данными
