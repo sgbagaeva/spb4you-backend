@@ -284,11 +284,6 @@ public class RouteService extends GenericService<Route, Integer> {
             existingRoute.setMainPhotoId(route.getMainPhotoId());
         }
 
-        // Обновление photoIds, если они были изменены
-        if (route.getPhotoIds() != null) {
-            existingRoute.setPhotoIds(route.getPhotoIds());
-        }
-
         // Обновление categoryIds, если они были изменены
         if (route.getCategoryIds() != null) {
             existingRoute.setCategoryIds(route.getCategoryIds());
@@ -448,9 +443,6 @@ public class RouteService extends GenericService<Route, Integer> {
 
             // 2. Сохраняем списки ID для последующего удаления
             List<Integer> photoIdsToDelete = new ArrayList<>();
-            if (route.getPhotoIds() != null) {
-                photoIdsToDelete.addAll(route.getPhotoIds());
-            }
             if (route.getMainPhotoId() != null && !photoIdsToDelete.contains(route.getMainPhotoId())) {
                 photoIdsToDelete.add(route.getMainPhotoId());
             }
@@ -479,7 +471,6 @@ public class RouteService extends GenericService<Route, Integer> {
 
             // 5. ОЧЕНЬ ВАЖНО: Сначала убираем ссылки на фото из таблицы routes
             route.setMainPhotoId(null);
-            route.setPhotoIds(new ArrayList<>());
             routeRepository.save(route);
             logger.info("Очищены ссылки на фото в маршруте с ID: {}", id);
 
@@ -573,78 +564,9 @@ public class RouteService extends GenericService<Route, Integer> {
         photo.setUrl(storageService.getFileUrl(photo.getFileKey()));
 
         route.setMainPhotoId(photo.getId());
-        if (route.getPhotoIds() == null) {
-            route.setPhotoIds(new ArrayList<>());
-        }
-        if (!route.getPhotoIds().contains(photo.getId())) {
-            route.getPhotoIds().add(photo.getId());
-        }
         routeRepository.save(route);
 
         return photo;
-    }
-
-    @Transactional
-    public List<Photo> uploadRoutePhotos(Integer routeId, List<MultipartFile> files) {
-        Route route = getRouteById(routeId);
-        List<Photo> uploadedPhotos = new ArrayList<>();
-
-        List<Photo> photos = storageService.saveRoutePhotos(routeId, files);
-
-        for (Photo photo : photos) {
-            Photo savedPhoto = photoRepository.save(photo);
-            savedPhoto.setUrl(storageService.getFileUrl(savedPhoto.getFileKey()));
-            uploadedPhotos.add(savedPhoto);
-
-            if (route.getPhotoIds() == null) {
-                route.setPhotoIds(new ArrayList<>());
-            }
-            route.getPhotoIds().add(savedPhoto.getId());
-        }
-
-        routeRepository.save(route);
-
-        return uploadedPhotos;
-    }
-
-    @Transactional(readOnly = true)
-    public List<Photo> getRoutePhotos(Integer routeId) {
-        Route route = getRouteById(routeId);
-        List<Photo> photos = route.getPhotos();
-
-        for (Photo photo : photos) {
-            photo.setUrl(storageService.getFileUrl(photo.getFileKey()));
-        }
-
-        return photos;
-    }
-
-    @Transactional
-    public void deleteRoutePhoto(Integer routeId, Integer photoId) {
-        Route route = getRouteById(routeId);
-
-        // Удаляем из списка photoIds маршрута
-        if (route.getPhotoIds() != null) {
-            route.getPhotoIds().remove(photoId);
-            routeRepository.save(route);
-        }
-
-        // Если это основное фото, сбрасываем mainPhotoId
-        if (route.getMainPhotoId() != null && route.getMainPhotoId().equals(photoId)) {
-            route.setMainPhotoId(null);
-            routeRepository.save(route);
-        }
-
-        // Удаляем фото из БД и облака
-        Optional<Photo> photoOpt = photoRepository.findById(photoId);
-        if (photoOpt.isPresent()) {
-            Photo photo = photoOpt.get();
-            // Удаляем файл из облачного хранилища
-            storageService.deleteFile(photo.getFileKey());
-            // Удаляем запись из БД
-            photoRepository.deleteById(photoId);
-            logger.info("Удалено фото ID: {}, fileKey: {}", photoId, photo.getFileKey());
-        }
     }
 
     @Transactional

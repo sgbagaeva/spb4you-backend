@@ -14,7 +14,7 @@ public interface LocationAdditionalInfoRepository extends CrudRepository<Locatio
 
     void deleteByLocationId(Integer locationId);
 
-        Optional<LocationAdditionalInfo> findByLocationIdAndAdditionalInfoId(
+    Optional<LocationAdditionalInfo> findByLocationIdAndAdditionalInfoId(
                 Integer locationId, Integer additionalInfoId);
     void deleteByLocationIdAndAdditionalInfoId(Integer locationId, Integer additionalInfoId);
     boolean existsByAdditionalInfoId(Integer additionalInfoId);

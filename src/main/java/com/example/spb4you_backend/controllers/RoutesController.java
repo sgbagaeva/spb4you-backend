@@ -145,18 +145,6 @@ public class RoutesController {
                 route.setMainPhotoId(mainPhotoId);
             }
 
-            if (updates.containsKey("photo_ids")) {
-                @SuppressWarnings("unchecked")
-                List<Integer> photoIds = (List<Integer>) updates.get("photo_ids");
-                route.setPhotoIds(photoIds);
-            }
-
-            if (updates.containsKey("photoIds")) {
-                @SuppressWarnings("unchecked")
-                List<Integer> photoIds = (List<Integer>) updates.get("photoIds");
-                route.setPhotoIds(photoIds);
-            }
-
             if (updates.containsKey("category_ids")) {
                 @SuppressWarnings("unchecked")
                 List<Integer> categoryIds = (List<Integer>) updates.get("category_ids");
@@ -251,25 +239,6 @@ public class RoutesController {
         } catch (Exception e) {
             logger.error("Ошибка при загрузке главного фото для маршрута {}: {}", id, e.getMessage(), e);
             return ResponseEntity.badRequest().build();
-        }
-    }
-
-    /**
-     * GET /routes/{id}/photos
-     * @param id
-     * @return
-     */
-    @GetMapping("/{id}/photos")
-    public ResponseEntity<List<Photo>> getRoutePhotos(@PathVariable Integer id) {
-        try {
-            List<Photo> photos = routeService.getRoutePhotos(id);
-            return ResponseEntity.ok(photos);
-        } catch (RuntimeException e) {
-            logger.error("Маршрут {} не найдена: {}", id, e.getMessage());
-            return ResponseEntity.notFound().build();
-        } catch (Exception e) {
-            logger.error("Ошибка при получении фото маршрута {}: {}", id, e.getMessage(), e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 

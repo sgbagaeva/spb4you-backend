@@ -38,11 +38,6 @@ public class RoutePoint {
         this.id = id;
     }
 
-    /**
-     * ID маршрута
-     * @return routeId
-     */
-
     public Integer getRouteId() {
         return routeId;
     }
@@ -51,11 +46,6 @@ public class RoutePoint {
         this.routeId = routeId;
     }
 
-    /**
-     * ID точки
-     * @return pointId
-     */
-
     public Integer getPointId() {
         return pointId;
     }
@@ -63,11 +53,6 @@ public class RoutePoint {
     public void setPointId(Integer pointId) {
         this.pointId = pointId;
     }
-
-    /**
-     * Позиция точки в маршруте
-     * @return sortOrder
-     */
 
     public Integer getSortOrder() {
         return sortOrder;

@@ -33,6 +33,12 @@ public class RouteAdditionalInfo {
         this.additionalInfoId = additionalInfoId;
     }
 
+    public RouteAdditionalInfo(Integer routeId, Integer additionalInfoId, Integer sortOrder) {
+        this.routeId = routeId;
+        this.additionalInfoId = additionalInfoId;
+        this.sortOrder = sortOrder;
+    }
+
     @Nonnull
     public Integer getId() {
         return id;

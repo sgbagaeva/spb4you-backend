@@ -40,9 +40,6 @@ public class Route {
     @JsonProperty("category_ids")
     private List<Integer> categoryIds = new ArrayList<>();
 
-    @JsonProperty("photo_ids")
-    private List<Integer> photoIds = new ArrayList<>();
-
     @Getter
     @JsonProperty("main_photo_id")
     private Integer mainPhotoId;
@@ -62,9 +59,6 @@ public class Route {
     /**
      * Транзиентные поля (не сохраняются в БД)
      */
-    @Transient
-    @JsonProperty("photos")
-    private List<Photo> photos = new ArrayList<>();
 
     @Transient
     @JsonProperty("points")
@@ -79,7 +73,7 @@ public class Route {
     @JsonProperty("main_photo_url")
     private String mainPhotoUrl;
 
-    // ===== Геттеры и сеттеры =====
+    // Геттеры и сеттеры
 
     @Nonnull
     public Integer getId() {
@@ -122,9 +116,6 @@ public class Route {
     public void setCategoryIds(List<Integer> categoryIds) {
         this.categoryIds = categoryIds != null ? categoryIds : new ArrayList<>();
     }
-    public List<Integer> getPhotoIds() { return photoIds != null ? photoIds : new ArrayList<>(); }
-    public void setPhotoIds(List<Integer> photoIds) { this.photoIds = photoIds != null ? photoIds : new ArrayList<>(); }
-    public void addPhotoId(Integer photoId) { this.photoIds.add(photoId); }
 
     public void setMainPhotoId(Integer mainPhotoId) {
         this.mainPhotoId = mainPhotoId;
@@ -147,14 +138,6 @@ public class Route {
     }
 
     // Транзиентные поля
-
-    public List<Photo> getPhotos() {
-        return photos != null ? photos : new ArrayList<>();
-    }
-
-    public void setPhotos(List<Photo> photos) {
-        this.photos = photos != null ? photos : new ArrayList<>();
-    }
 
     public List<Point> getPoints() {
         return points != null ? points : new ArrayList<>();
